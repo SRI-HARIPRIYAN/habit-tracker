@@ -1,151 +1,94 @@
-import React from "react";
-import { BsFillDropletFill } from "react-icons/bs";
-import { FaDumbbell } from "react-icons/fa";
-import { FiBookOpen, FiCoffee } from "react-icons/fi";
-import { HiUser } from "react-icons/hi";
-import HabitTodayCard from "../../components/habits/HabitTodayCard";
-import HeatmapSelector from "../../components/heatmap/HeatmapSelector";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import backendUrl from "../../api/Constanceapi";
+import HabitCard from "../../components/habits/HabitCard";
+import Spinner from "../../components/common/Spinner";
+import { motion } from "framer-motion";
 
 export default function Dashboard() {
-  const todayStats = {
-    completed: 5,
-    pending: 3,
+  const [habits, setHabits] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchHabits = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/habits`, {
+          withCredentials: true,
+        });
+
+        setHabits(response.data.data || []);
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to load habits.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHabits();
+  }, []);
+
+  // Handler to remove habit from state after deletion
+  const handleDelete = (habitId) => {
+    setHabits((prev) =>
+      prev.filter((habit) => habit.id !== habitId && habit._id !== habitId)
+    );
   };
 
-  const todaysHabits = [
-    {
-      id: 1,
-      name: "Drink Water",
-      icon: BsFillDropletFill,
-      frequency: "Daily",
-      color: "blue",
-      completed: true,
-    },
-    {
-      id: 2,
-      name: "Morning Workout",
-      icon: FaDumbbell,
-      frequency: "Daily",
-      color: "purple",
-      completed: false,
-    },
-    {
-      id: 3,
-      name: "Read 30 mins",
-      icon: FiBookOpen,
-      frequency: "Daily",
-      color: "indigo",
-      completed: true,
-    },
-    {
-      id: 4,
-      name: "Meditate",
-      icon: FiCoffee,
-      frequency: "Weekdays",
-      color: "violet",
-      completed: false,
-    },
-  ];
-    const sampleData = {
-    "2025-1-1": 5,
-    "2025-1-2": 1,
-    "2025-1-3": 9,
-    "2025-2-10": 3,
-    "2025-4-23": 7,
-    "2025-7-15": 12,
-  };
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-white">
+        <Spinner />
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="min-h-screen flex items-center flex-col justify-center text-red-400 text-lg bg-black">
+        <p>Error: {error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-red-600/80 hover:bg-red-600 rounded-xl">
+          Retry
+        </button>
+      </div>
+    );
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-gray-100 pb-24 px-4 sm:px-6 lg:px-12">
+    <div className="min-h-screen bg-[#0B0B0B] text-gray-100 px-4 sm:px-6 lg:px-16 py-10 pb-24">
       {/* HEADER */}
-      <div className="pt-12 pb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-        <div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-100">
-            Good Evening,
-          </h1>
-          <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mt-1">
-            Alex
+      <div className="mb-10">
+        <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+          Your Habits
+        </h1>
+        <p className="text-gray-500 mt-1">
+          Track your daily progress & stay consistent ✨
+        </p>
+      </div>
+
+      {/* MAIN CONTENT */}
+      {habits.length === 0 ? (
+        <div className="flex flex-col items-center justify-center mt-20 text-gray-400">
+          <div className="text-6xl mb-4">🧩</div>
+          <p className="text-xl font-light">No habits found</p>
+          <p className="text-gray-500 text-sm mt-1">
+            Start building your daily routine.
           </p>
         </div>
-
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center shadow-xl shadow-purple-800/40">
-          <HiUser className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-        </div>
-      </div>
-
-      {/* TODAY'S SUMMARY */}
-      <div className="mb-8">
-        <div className="bg-[#121212]/80 backdrop-blur-xl rounded-3xl border border-gray-800/60 p-4 sm:p-6 shadow-2xl">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-300 mb-4 sm:mb-6">
-            Today's Summary
-          </h2>
-
-          <div className="grid grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8 text-center">
-            {/* Completed */}
-            <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-400">
-                {todayStats.completed}
-              </div>
-              <p className="text-xs sm:text-sm md:text-base text-gray-500 mt-1">
-                Completed
-              </p>
-            </div>
-
-            {/* Pending */}
-            <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-orange-400">
-                {todayStats.pending}
-              </div>
-              <p className="text-xs sm:text-sm md:text-base text-gray-500 mt-1">
-                Pending
-              </p>
-            </div>
-
-            {/* Daily Goal Progress */}
-            <div className="col-span-3 sm:col-span-3 md:col-span-3">
-              <div className="flex justify-between text-xs sm:text-sm md:text-base text-gray-400 mb-1">
-                <span>Daily Goal</span>
-                <span>
-                  {todayStats.completed}/
-                  {todayStats.completed + todayStats.pending}
-                </span>
-              </div>
-              <div className="w-full bg-gray-800 rounded-full h-2 sm:h-3 overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-700"
-                  style={{
-                    width: `${
-                      (todayStats.completed /
-                        (todayStats.completed + todayStats.pending)) *
-                      100
-                    }%`,
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* TODAY'S HABITS */}
-      <div>
-        <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-300 mb-4">
-          Today's Habits
-        </h3>
-
-        <div className="space-y-3">
-          {todaysHabits.map((habit, i) => (
-            <HabitTodayCard
-              key={i}
+      ) : (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}>
+          {habits.map((habit) => (
+            <HabitCard
+              key={habit.id || habit._id}
               habit={habit}
+              onDelete={handleDelete} // Pass the delete handler
             />
           ))}
-        </div>
-      </div>
-
-      <div>
-        <HeatmapSelector data={sampleData} year={"current"}/>
-      </div>
+        </motion.div>
+      )}
     </div>
   );
 }

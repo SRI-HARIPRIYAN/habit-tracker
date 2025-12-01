@@ -87,10 +87,12 @@ const CategoryGrid = ({
   setFormData,
 }) => {
   return (
-    <div className="space-y-5">
-      <label className="text-sm text-gray-300">Pick a vibe</label>
+    <div className="space-y-5 flex gap-2 flex-col">
+      <label className="text-sm text-gray-300 font-medium px-2  ">
+        Pick a vibe
+      </label>
 
-      <div className="grid grid-cols-4 gap-5">
+      <div className="grid grid-cols-4 gap-3">
         {categories.map((cat) => (
           <button
             key={cat.id}
@@ -98,17 +100,19 @@ const CategoryGrid = ({
             onClick={() => {
               setSelectedCategory(cat.id);
               setFormData((prev) => ({ ...prev, category: cat.id }));
-            }}>
+            }}
+            className="flex flex-col items-center">
             <div
-              className={`p-6 rounded-3xl border-4 transition-all ${
-                selectedCategory === cat.id
-                  ? `bg-gradient-to-br ${cat.gradient} border-transparent`
-                  : "bg-white/5 border-white/10"
-              }`}>
+              className={`p-6 rounded-3xl border-4 transition-all duration-200
+                ${
+                  selectedCategory === cat.id
+                    ? `bg-gradient-to-br ${cat.gradient} border-transparent`
+                    : "bg-white/5 border-white/10"
+                }`}>
               <div className="text-center text-3xl">{cat.icon}</div>
             </div>
             <p
-              className={`mt-3 text-xs text-center ${
+              className={`mt-2 text-xs text-center font-medium ${
                 selectedCategory === cat.id ? "text-white" : "text-gray-400"
               }`}>
               {cat.label}

@@ -6,6 +6,7 @@ import HabitNameInput from "./HabitNameInput";
 import FrequencySelector from "./FrequencySelector";
 import WeeklyDaysSelector from "./WeeklyDaysSelector";
 import CategoryGrid from "./CategoryGrid";
+import Spinner from "../../components/common/Spinner";
 
 const dayMap = [
   "SUNDAY",
@@ -29,7 +30,7 @@ const HabitForm = () => {
     name: "",
     description: "",
     frequency: "daily",
-    days: [], // daily default → all days
+    days: [...dayMap],
     category: "Health",
   });
 
@@ -37,6 +38,8 @@ const HabitForm = () => {
     name: false,
     days: false,
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
     const errors = {
@@ -62,7 +65,8 @@ const HabitForm = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    // Auto-convert weekly → daily if all 7 days selected
+    setIsSubmitting(true);
+
     const isAllDaysSelected =
       formData.frequency === "weekly" && formData.days.length === 7;
 
@@ -82,10 +86,11 @@ const HabitForm = () => {
 
     try {
       await createHabit(payload);
-      console.log("Habit Created →", payload);
-      navigate("/"); // Redirect to home
+      navigate("/");
     } catch (error) {
       console.error("Failed to create habit", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -146,8 +151,14 @@ const HabitForm = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-6 mt-12 rounded-3xl font-bold text-xl bg-gradient-to-r from-indigo-500 to-purple-600">
-            Create Habit
+            disabled={isSubmitting}
+            className={`w-full py-6 mt-12 rounded-3xl font-bold text-xl flex items-center justify-center transition 
+            ${
+              isSubmitting
+                ? "opacity-60 cursor-not-allowed bg-indigo-500"
+                : "bg-gradient-to-r from-indigo-500 to-purple-600"
+            }`}>
+            {isSubmitting ? <Spinner size={32} /> : "Create Habit"}
           </button>
         </form>
       </div>

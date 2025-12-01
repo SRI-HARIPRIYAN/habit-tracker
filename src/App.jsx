@@ -3,7 +3,7 @@ import AppRouter from "./router/AppRouter";
 
 const App = () => {
   return (
-    <div>
+    <div className="bg-background select-none">
       <AuthProvider>
         <AppRouter />
       </AuthProvider>

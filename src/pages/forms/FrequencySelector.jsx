@@ -17,9 +17,11 @@ const options = [
 const FrequencySelector = ({ active, setActive, formData, setFormData }) => {
   return (
     <div className="space-y-3">
-      <label className="text-sm text-gray-300 font-medium">How often?</label>
+      <label className=" p-2 text-sm text-gray-300 font-medium">
+        How often?
+      </label>
 
-      <div className="flex gap-3">
+      <div className="flex gap-3 p-3">
         {options.map((opt) => {
           const isActive = active === opt.id;
 
