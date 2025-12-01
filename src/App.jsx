@@ -1,9 +1,12 @@
+import { AuthProvider } from "./context/AuthContext";
 import AppRouter from "./router/AppRouter";
 
 const App = () => {
   return (
     <div>
-      <AppRouter />
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
     </div>
   );
 };

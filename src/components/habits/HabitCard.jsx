@@ -5,6 +5,8 @@ import {
   HiOutlineTrash,
   HiOutlineX,
 } from "react-icons/hi";
+import { categoryIcons } from "../../utils/categoryIcons";
+import { categoryColors } from "../../utils/categoryIcons";
 
 export default function HabitCard({ habit, onDelete }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -22,9 +24,9 @@ export default function HabitCard({ habit, onDelete }) {
     };
     return map[color] || map.blue;
   };
-
-  const Icon = habit.icon;
-  const accent = getAccentClasses(habit.color);
+  console.log(habit);
+  const Icon = categoryIcons[habit.category]; // get the actual icon component
+  const accent = getAccentClasses(categoryColors[habit.category] || "blue");
 
   return (
     <>

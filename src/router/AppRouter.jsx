@@ -3,8 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import AllHabitsPage from "../pages/habits/AllHabitsPage";
 import Dashboard from "../pages/dashboard/Dashboard";
 import HabitForm from "../pages/forms/HabitForm";
+import ProtectedRoute from "./ProtectedRoute";
 
-Routes;
 const AppRouter = () => {
   return (
     <div>
@@ -14,15 +14,29 @@ const AppRouter = () => {
           path="/login"
         />
         <Route
-          element={<AllHabitsPage />}
+          element={
+            <ProtectedRoute>
+              <AllHabitsPage />
+            </ProtectedRoute>
+          }
           path="/"
         />
+
         <Route
-          element={<Dashboard />}
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
           path="/dashboard"
         />
+
         <Route
-          element={<HabitForm />}
+          element={
+            <ProtectedRoute>
+              <HabitForm />
+            </ProtectedRoute>
+          }
           path="/add-habit"
         />
       </Routes>

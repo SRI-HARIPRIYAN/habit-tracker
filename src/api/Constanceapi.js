@@ -1,3 +1,3 @@
-const backendUrl = "http://localhost:8080/habits";
+const backendUrl = "http://localhost:8080";
 
 export default backendUrl;

@@ -1,6 +1,19 @@
 import axios from "axios";
 import backendurl from "./Constanceapi";
 
-export default async function googleLogin() {
-  window.location.href = `http://localhost:8080/oauth2/authorization/google`;
-}
+// 👉 Login Redirect (Google OAuth)
+export const loginWithGoogle = () => {
+  window.location.href = `${backendurl}/oauth2/authorization/google`;
+};
+
+// 👉 Fetch logged-in user (Spring Boot session cookie)
+export const fetchUser = async () => {
+  try {
+    const response = await axios.get(`${backendurl}/api/auth/me`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    return null; // if not logged in
+  }
+};

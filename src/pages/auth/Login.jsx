@@ -1,13 +1,13 @@
 import React from "react";
 import logo from "../../assets/newLogo.png";
 import { FcGoogle } from "react-icons/fc";
-import googleLogin from "../../api/loginApi";
+import { loginWithGoogle } from "../../api/loginApi";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
   const handleLogin = () => {
-    googleLogin();
+    loginWithGoogle();
   };
   return (
     <div className="min-h-screen bg-background gradient-bg flex items-center justify-center px-4">
