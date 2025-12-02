@@ -2,49 +2,57 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Profile from "../../components/common/Profile";
 import logo from "../../assets/newLogo.png";
+import { motion } from "framer-motion";
 
 export default function Navbar({ todayStats }) {
   const navigate = useNavigate();
 
   const handleNavigate = () => navigate("/dashboard");
+  const handleNavigateHome = () => navigate("/");
 
   return (
-    <div
-      className="flex justify-between items-center px-4 py-3 
-      bg-background backdrop-blur-xl border border-neutral-800 
-    shadow-md shadow-black/20">
-      {/* Left Section */}
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex justify-between items-center px-5 py-4
+      bg-[#0C0C0C]/70 backdrop-blur-2xl border-b border-neutral-800
+      shadow-xl shadow-black/30  top-0 z-50">
+      {/* LEFT SECTION */}
       <div className="flex items-center gap-4">
-        <img
-          src={logo}
-          alt="Habit Tracker Logo"
-          className="w-12 h-12 object-contain rounded-lg shadow-md"
-        />
+        <button
+          onClick={handleNavigateHome}
+          className="cursor-pointer">
+          <img
+            src={logo}
+            alt="Habit Tracker Logo"
+            className="w-12 h-12 object-contain rounded-xl shadow-lg"
+          />
+        </button>
 
         <div>
-          <h3 className="text-xl font-bold tracking-wide text-white">
+          <h3 className="text-md md:text-xl font-extrabold tracking-wide text-white leading-none">
             Habit Tracker
           </h3>
-
-          {todayStats && (
-            <p className="text-xs text-neutral-400 mt-1">
-              Completed: {todayStats.completed} • Pending: {todayStats.pending}
-            </p>
-          )}
         </div>
       </div>
 
-      {/* Right Section */}
-      <div className="flex items-center gap-4">
-        <button
+      {/* RIGHT SECTION */}
+      <div className="flex items-center gap-5">
+        <motion.button
+          whileTap={{ scale: 0.95 }}
           onClick={handleNavigate}
-          className="px-4 py-2 bg-neutral-900/90 border border-neutral-700 
-          rounded-xl text-sm text-white hover:bg-neutral-800 transition-all">
+          className="px-5 py-2.5 
+      bg-[#111]/80 
+      border border-neutral-700/60 
+      rounded-xl text-sm font-medium text-white 
+      hover:bg-[#191919] hover:border-neutral-600
+      transition-all duration-200 shadow-lg shadow-black/20
+      backdrop-blur-xl cursor-pointer z-50">
           Dashboard
-        </button>
+        </motion.button>
 
         <Profile />
       </div>
-    </div>
+    </motion.div>
   );
 }

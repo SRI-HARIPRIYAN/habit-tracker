@@ -65,7 +65,7 @@ const Profile = () => {
 
           <button
             onClick={handleLogout}
-            className="mt-4 w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition">
+            className="mt-4 w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition cursor-pointer">
             Logout
           </button>
         </div>

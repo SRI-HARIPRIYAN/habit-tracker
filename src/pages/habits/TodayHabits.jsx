@@ -68,14 +68,6 @@ export default function TodayHabits() {
       </div>
     );
 
-  // ❌ ERROR UI
-  if (error)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-red-500 text-lg">
-        Error: {error}
-      </div>
-    );
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -84,14 +76,9 @@ export default function TodayHabits() {
       {todaysHabits.length === 0 ? (
         <div className="flex flex-col items-center justify-center pt-20 text-neutral-400">
           <p className="text-lg">No habits found.</p>
-          <button
-            onClick={() => navigate("/add-habit")}
-            className="mt-4 px-4 py-2 bg-blue-600 rounded-xl hover:bg-blue-500 transition">
-            Create your first habit
-          </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {todaysHabits.map((habit) => (
             <motion.div
               key={habit.id}
@@ -112,7 +99,7 @@ export default function TodayHabits() {
       <motion.button
         whileTap={{ scale: 0.9 }}
         onClick={() => navigate("/add-habit")}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-[0_0_25px_rgba(59,130,246,0.5)] transition-all">
+        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-500 cursor-pointer text-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-[0_0_25px_rgba(59,130,246,0.5)] transition-all">
         <span className="text-4xl font-bold">+</span>
       </motion.button>
     </motion.div>

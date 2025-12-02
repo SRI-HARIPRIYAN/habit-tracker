@@ -4,6 +4,7 @@ import backendUrl from "../../api/Constanceapi";
 import HabitCard from "../../components/habits/HabitCard";
 import Spinner from "../../components/common/Spinner";
 import { motion } from "framer-motion";
+import HeatmapSelector from "../../components/heatmap/HeatmapSelector";
 
 export default function Dashboard() {
   const [habits, setHabits] = useState([]);
@@ -16,7 +17,6 @@ export default function Dashboard() {
         const response = await axios.get(`${backendUrl}/api/habits`, {
           withCredentials: true,
         });
-
         setHabits(response.data.data || []);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to load habits.");
@@ -28,7 +28,6 @@ export default function Dashboard() {
     fetchHabits();
   }, []);
 
-  // Handler to remove habit from state after deletion
   const handleDelete = (habitId) => {
     setHabits((prev) =>
       prev.filter((habit) => habit.id !== habitId && habit._id !== habitId)
@@ -42,49 +41,57 @@ export default function Dashboard() {
       </div>
     );
 
-  if (error)
-    return (
-      <div className="min-h-screen flex items-center flex-col justify-center text-red-400 text-lg bg-black">
-        <p>Error: {error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-red-600/80 hover:bg-red-600 rounded-xl">
-          Retry
-        </button>
-      </div>
-    );
-
   return (
-    <div className="min-h-screen bg-[#0B0B0B] text-gray-100 px-4 sm:px-6 lg:px-16 py-10 pb-24">
-      {/* HEADER */}
-      <div className="mb-10">
-        <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-          Your Habits
-        </h1>
-        <p className="text-gray-500 mt-1">
-          Track your daily progress & stay consistent ✨
-        </p>
+    <div className="min-h-screen bg-[#050505] text-gray-100 px-4 sm:px-6 lg:px-20 py-12 pb-28">
+      {/* TOP SECTION */}
+      <div className="mb-12">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-2xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+          Habit Tracker Dashboard
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-gray-500 mt-2 text-md">
+          Stay consistent • Track your growth • Build your best self ✨
+        </motion.p>
       </div>
 
-      {/* MAIN CONTENT */}
+      {/* HEATMAP SECTION */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="mb-12">
+        <HeatmapSelector />
+      </motion.div>
+
+      {/* HABIT LIST SECTION */}
       {habits.length === 0 ? (
-        <div className="flex flex-col items-center justify-center mt-20 text-gray-400">
-          <div className="text-6xl mb-4">🧩</div>
-          <p className="text-xl font-light">No habits found</p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center justify-center mt-20 text-gray-400">
+          <div className="text-7xl mb-4">📭</div>
+          <p className="text-2xl font-light">No habits added</p>
           <p className="text-gray-500 text-sm mt-1">
-            Start building your daily routine.
+            Start building your daily routine today.
           </p>
-        </div>
+        </motion.div>
       ) : (
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}>
           {habits.map((habit) => (
             <HabitCard
               key={habit.id || habit._id}
               habit={habit}
-              onDelete={handleDelete} // Pass the delete handler
+              onDelete={handleDelete}
             />
           ))}
         </motion.div>

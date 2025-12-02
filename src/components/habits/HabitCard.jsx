@@ -62,8 +62,10 @@ export default function HabitCard({ habit, onDelete }) {
       {/* Right: Regular Delete Button */}
       <button
         onClick={handleDelete}
-        className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors">
-        <HiOutlineTrash className="w-5 h-5" />
+        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-red-600 
+             hover:bg-red-700 text-white rounded-lg transition-colors 
+             cursor-pointer text-sm">
+        <HiOutlineTrash className="w-4 h-4" />
         Delete
       </button>
     </div>
