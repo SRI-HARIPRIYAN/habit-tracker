@@ -5,11 +5,8 @@ const HeatmapCell = ({ cell, index }) => {
     <div
       key={index}
       className={`w-5 h-5 rounded-sm ${getColor(cell.value)}`}
-      {...(cell.value !== null
-        ? { title: `${cell.key}: ${cell.value}` }
-        : {})}
-      style={{ gridRow: (index % 7) + 1 }}
-    ></div>
+      {...(cell.value !== null ? { title: `${cell.key}: ${cell.value}` } : {})}
+      style={{ gridRow: (index % 7) + 1 }}></div>
   );
 };
 

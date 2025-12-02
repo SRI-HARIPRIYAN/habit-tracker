@@ -17,13 +17,18 @@ const HeatmapCalendar = ({ data, year }) => {
 
     while (
       temp.getFullYear() < today.getFullYear() ||
-      (temp.getFullYear() === today.getFullYear() && temp.getMonth() <= today.getMonth())
+      (temp.getFullYear() === today.getFullYear() &&
+        temp.getMonth() <= today.getMonth())
     ) {
       monthsToDisplay.push({
         y: temp.getFullYear(),
         m: temp.getMonth(),
-        isFirst: temp.getFullYear() === start.getFullYear() && temp.getMonth() === start.getMonth(),
-        isLast: temp.getFullYear() === today.getFullYear() && temp.getMonth() === today.getMonth()
+        isFirst:
+          temp.getFullYear() === start.getFullYear() &&
+          temp.getMonth() === start.getMonth(),
+        isLast:
+          temp.getFullYear() === today.getFullYear() &&
+          temp.getMonth() === today.getMonth(),
       });
 
       temp.setMonth(temp.getMonth() + 1);
@@ -45,16 +50,18 @@ const HeatmapCalendar = ({ data, year }) => {
 
       <div className="flex w-[calc(100vw-10vw)] overflow-x-auto">
         {/* WEEKDAY LABELS */}
-        <div className="flex flex-col gap-0.5 py-2 sticky -left-0.5 z-10 bg-black">
+        <div className="flex flex-col gap-0.5 py-2 sticky left-0 z-10 bg-black">
           {weekdays.map((d, idx) => (
-            <div key={idx} className="flex items-center h-5 text-xs text-gray-600">
+            <div
+              key={idx}
+              className="flex items-center h-5 text-xs font-medium text-gray-300 px-4">
               {d}
             </div>
           ))}
         </div>
 
         {/* MONTH BLOCKS */}
-        <div className="flex gap-1">
+        <div className="flex gap-2 px-2">
           {monthsToDisplay.map((obj, i) => (
             <HeatmapMonth
               key={i}

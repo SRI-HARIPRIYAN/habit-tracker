@@ -21,7 +21,10 @@ const HeatmapMonth = ({ y, m, isFirst, isLast, year, today, data }) => {
     }
 
     for (let d = startDay; d <= days; d++) {
-      const key = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const key = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(
+        2,
+        "0"
+      )}`;
       cells.push({ key, value: data[key] ?? 0 });
     }
   }
@@ -38,7 +41,10 @@ const HeatmapMonth = ({ y, m, isFirst, isLast, year, today, data }) => {
     }
 
     for (let d = 1; d <= endDay; d++) {
-      const key = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const key = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(
+        2,
+        "0"
+      )}`;
       cells.push({ key, value: data[key] ?? 0 });
     }
 
@@ -54,14 +60,19 @@ const HeatmapMonth = ({ y, m, isFirst, isLast, year, today, data }) => {
     const firstDay = new Date(y, m, 1).getDay();
     const lastDay = new Date(y, m, days).getDay();
 
-    for (let i = 0; i < firstDay; i++) cells.push({ key: `b-${i}`, value: null });
+    for (let i = 0; i < firstDay; i++)
+      cells.push({ key: `b-${i}`, value: null });
 
     for (let d = 1; d <= days; d++) {
-      const key = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const key = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(
+        2,
+        "0"
+      )}`;
       cells.push({ key, value: data[key] ?? 0 });
     }
 
-    for (let i = 0; i < 6 - lastDay; i++) cells.push({ key: `a-${i}`, value: null });
+    for (let i = 0; i < 6 - lastDay; i++)
+      cells.push({ key: `a-${i}`, value: null });
   }
 
   return (
@@ -70,14 +81,18 @@ const HeatmapMonth = ({ y, m, isFirst, isLast, year, today, data }) => {
       <div className="text-center font-semibold text-sm mb-2">
         {new Date(y, m).toLocaleString("default", {
           month: "short",
-          year: "2-digit"
+          year: "2-digit",
         })}
       </div>
 
       {/* GRID */}
       <div className="grid grid-rows-7 auto-cols-max gap-0.5">
         {cells.map((cell, index) => (
-          <HeatmapCell key={index} cell={cell} index={index} />
+          <HeatmapCell
+            key={index}
+            cell={cell}
+            index={index}
+          />
         ))}
       </div>
     </div>
