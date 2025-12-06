@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { motion } from "framer-motion";
 
-import backendUrl from "../../api/Constanceapi";
 import HabitTodayCard from "../../components/habits/HabitTodayCard";
-import Navbar from "./Navbar";
-import Spinner from "../../components/common/Spinner"; // ✅ ADDED
+import Spinner from "../../components/common/Spinner";
+
+// Service functions
+import { getTodayHabits } from "../../api/habit";
 
 export default function TodayHabits() {
   const [loading, setLoading] = useState(true);
@@ -16,19 +16,20 @@ export default function TodayHabits() {
 
   const navigate = useNavigate();
 
-  const fetchTodayHabits = async () => {
+  // FETCH TODAY'S HABITS (FROM SERVICE)
+  const fetchTodayHabitsData = async () => {
     try {
-      const res = await axios.get(`${backendUrl}/api/habits/today`, {
-        withCredentials: true,
-      });
-
+      const res = await getTodayHabits();
       const habits = res.data.data || [];
+
       setTodaysHabits(habits);
 
       const completed = habits.filter(
         (h) => h.habitStatus === "COMPLETED"
       ).length;
+
       const pending = habits.length - completed;
+
       setTodayStats({ completed, pending });
     } catch (err) {
       console.error("Failed to fetch today's habits:", err);
@@ -38,10 +39,12 @@ export default function TodayHabits() {
     }
   };
 
+  // DELETE FROM UI ONLY
   const handleDelete = (id) => {
     setTodaysHabits((prev) => prev.filter((habit) => habit.id !== id));
   };
 
+  // STATUS UPDATE (UI ONLY)
   const handleStatusChange = (habitId, status) => {
     setTodaysHabits((prev) =>
       prev.map((habit) =>
@@ -52,15 +55,16 @@ export default function TodayHabits() {
     const completed = todaysHabits.filter((h) =>
       h.id === habitId ? status === "COMPLETED" : h.habitStatus === "COMPLETED"
     ).length;
+
     const pending = todaysHabits.length - completed;
     setTodayStats({ completed, pending });
   };
 
   useEffect(() => {
-    fetchTodayHabits();
+    fetchTodayHabitsData();
   }, []);
 
-  // ✅ LOADING UI WITH SPINNER
+  // LOADING UI
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -95,7 +99,7 @@ export default function TodayHabits() {
         </div>
       )}
 
-      {/* ➕ Floating Add Button */}
+      {/* ADD NEW HABIT BUTTON */}
       <motion.button
         whileTap={{ scale: 0.9 }}
         onClick={() => navigate("/add-habit")}

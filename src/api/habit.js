@@ -17,3 +17,30 @@ export const createHabit = async (habitData) => {
   }
 };
 
+export async function updateHabitStatus(habitId, newStatus) {
+  return axios.put(
+    `${backendurl}/api/habits/${habitId}`,
+    { status: newStatus },
+    { withCredentials: true }
+  );
+}
+
+export function getAllHabits() {
+  return axios.get(`${backendurl}/api/habits`, {
+    withCredentials: true,
+  });
+}
+
+export function deleteHabit(habitId) {
+  return axios.delete(`${backendurl}/api/habits/${habitId}`, {
+    withCredentials: true,
+  });
+}
+
+export function getTodayHabits() {
+  return axios.get(`${backendurl}/api/habits/today`, {
+    withCredentials: true,
+  });
+}
+
+

@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { HiCheckCircle } from "react-icons/hi";
 import { categoryIcons } from "../../utils/categoryIcons";
-import axios from "axios";
-import backendUrl from "../../api/Constanceapi";
+import { updateHabitStatus } from "../../api/habit";
 
 export default function HabitTodayCard({ habit, onStatusChange }) {
   const Icon = categoryIcons[habit.category];
   const [status, setStatus] = useState(habit.habitStatus);
 
+  // Sync UI if parent updates habit status
   useEffect(() => {
     setStatus(habit.habitStatus);
   }, [habit.habitStatus]);
 
-  const updateStatus = async (newStatus) => {
-    setStatus(newStatus); // Update UI immediately
+  // Update habit status handler
+  const handleUpdateStatus = async (newStatus) => {
+    setStatus(newStatus); // UI update immediately
 
     try {
-      await axios.put(
-        `${backendUrl}/api/habits/${habit.id}`,
-        { status: newStatus },
-        { withCredentials: true }
-      );
+      await updateHabitStatus(habit.id, newStatus);
 
-      // Notify parent
+      // notify parent
       onStatusChange(habit.id, newStatus);
     } catch (error) {
       console.error("Error updating habit:", error);
-      setStatus(habit.habitStatus); // Revert if error
+      setStatus(habit.habitStatus); // revert UI on failure
     }
   };
 
@@ -70,13 +67,14 @@ export default function HabitTodayCard({ habit, onStatusChange }) {
       ) : (
         <div className="flex gap-2 md:gap-3 flex-wrap">
           <button
-            onClick={() => updateStatus("COMPLETED")}
+            onClick={() => handleUpdateStatus("COMPLETED")}
             className="px-3 md:px-4 py-1.5 md:py-2 rounded-xl bg-purple-600/20 border border-purple-500/40 
             text-purple-300 text-sm md:text-base hover:bg-purple-600/30 active:scale-95 transition-all">
             Mark Completed
           </button>
+
           <button
-            onClick={() => updateStatus("SKIPPED")}
+            onClick={() => handleUpdateStatus("SKIPPED")}
             className="px-3 md:px-4 py-1.5 md:py-2 rounded-xl bg-red-600/20 border border-red-500/40 
             text-red-300 text-sm md:text-base hover:bg-red-600/30 active:scale-95 transition-all">
             Skip

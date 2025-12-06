@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import backendUrl from "../../api/Constanceapi";
 import HabitCard from "../../components/habits/HabitCard";
 import Spinner from "../../components/common/Spinner";
 import { motion } from "framer-motion";
 import HeatmapSelector from "../../components/heatmap/HeatmapSelector";
 import ConfirmModals from "../../components/common/ConfirmModals";
 
+// service file imports
+import { getAllHabits, deleteHabit } from "../../api/habit";
+
 export default function Dashboard() {
   const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedHabit, setSelectedHabit] = useState(null); // habit to delete
+  const [selectedHabit, setSelectedHabit] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  // FETCH ALL HABITS
   useEffect(() => {
     const fetchHabits = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/habits`, {
-          withCredentials: true,
-        });
+        const response = await getAllHabits();
         setHabits(response.data.data || []);
       } catch (err) {
         console.error(err);
@@ -26,28 +26,31 @@ export default function Dashboard() {
         setLoading(false);
       }
     };
+
     fetchHabits();
   }, []);
 
-  // When a card triggers delete
+  // OPEN CONFIRM MODAL
   const openConfirmModal = (habit) => {
     setSelectedHabit(habit);
     setShowModal(true);
   };
 
-  // Delete habit
+  // DELETE HABIT
   const handleDelete = async () => {
     if (!selectedHabit) return;
+
     try {
-      await axios.delete(`${backendUrl}/api/habits/${selectedHabit.id}`, {
-        withCredentials: true,
-      });
+      await deleteHabit(selectedHabit.id);
+
+      // Remove habit from UI
       setHabits((prev) =>
         prev.filter(
           (habit) =>
             habit.id !== selectedHabit.id && habit._id !== selectedHabit.id
         )
       );
+
       setSelectedHabit(null);
       setShowModal(false);
     } catch (err) {
@@ -55,6 +58,7 @@ export default function Dashboard() {
     }
   };
 
+  // LOADING STATE
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-white">
@@ -82,7 +86,7 @@ export default function Dashboard() {
         </motion.p>
       </div>
 
-      {/* HEATMAP SECTION */}
+      {/* HEATMAP */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -91,7 +95,7 @@ export default function Dashboard() {
         <HeatmapSelector />
       </motion.div>
 
-      {/* HABIT LIST SECTION */}
+      {/* HABIT LIST */}
       {habits.length === 0 ? (
         <motion.div
           initial={{ opacity: 0 }}
@@ -112,13 +116,13 @@ export default function Dashboard() {
             <HabitCard
               key={habit.id || habit._id}
               habit={habit}
-              onDelete={() => openConfirmModal(habit)} // trigger modal
+              onDelete={() => openConfirmModal(habit)}
             />
           ))}
         </motion.div>
       )}
 
-      {/* CENTRALIZED CONFIRMATION MODAL */}
+      {/* CONFIRM DELETE MODAL */}
       <ConfirmModals
         show={showModal}
         onClose={() => setShowModal(false)}
